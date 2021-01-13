@@ -1,1 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: "IRANsance";
+    font-style: normal;
+    font-weight: 400;
+    src: url("assets/fonts/IRANSans/Farsi_numerals/webFonts/fonts/ttf/IRANSansWeb\(FaNum\).ttf");
+    src: local("IRANSansWeb"), local("IRANSansWeb"),
+        url("assets/fonts/IRANSans/Farsi_numerals/webFonts/fonts/ttf/IRANSansWeb\(FaNum\).ttf");
+}
+@font-face {
+    font-family: "IRANsanceBold";
+    font-style: normal;
+    font-weight: 400;
+    src: url("assets/fonts/IRANSans/Farsi_numerals/webFonts/fonts/ttf/IRANSansWeb\(FaNum\)_Bold.ttf");
+    src: local("IRANSansWeb"), local("IRANSansWeb"),
+        url("assets/fonts/IRANSans/Farsi_numerals/webFonts/fonts/ttf/IRANSansWeb\(FaNum\)_Bold.ttf");
+}
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-size: 100%;
+}
+
+body * {
+    font-family: IRANsance;
+}
+
+.cal-open-day-events {
+    direction: rtl !important;
+    text-align: right;
+}
+
+.wrapper {
+    margin-top: 140px;
+    margin-right: 140px;
+    margin-left: 140px;
+    // height: auto;
+}
