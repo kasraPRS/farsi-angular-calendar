@@ -1,3 +1,4 @@
+import { depositMock } from './../../deposit-turnover/deposit-mock';
 import { CalendarService } from './calendar.service';
 import {
   Component,
@@ -27,8 +28,8 @@ import {
 import { Subject } from 'rxjs';
 import moment from 'moment-jalaali';
 
-import { colors } from './calendar-config';
-
+import { colors, actions } from './calendar-config';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'calendar',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,8 +38,7 @@ import { colors } from './calendar-config';
 })
 export class CalendarComponent implements OnInit {
 
-  @ViewChild('modalContent')
-  modalContent: TemplateRef<any>;
+  @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   CalendarView = CalendarView;
 
@@ -56,29 +56,38 @@ export class CalendarComponent implements OnInit {
 
   refresh: Subject<any> = new Subject();
 
+  // actions = actions;
+  colors = colors;
+  @Input() depositItems: any[] = [];
+  events: CalendarEvent[] = [];
+
+
+  modalData: {
+    action: string;
+    event: CalendarEvent;
+  };
+
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fa fa-fw fa-pencil"></i>',
+      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+      a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        // this.handleEvent('Edited', event);
-      }
+        this.handleEvent('Edited', event);
+      },
     },
     {
-      label: '<i class="fa fa-fw fa-times"></i>',
+      label: '<i class="fas fa-fw fa-trash-alt"></i>',
+      a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter(iEvent => iEvent !== event);
-        // this.handleEvent('Deleted', event);
-      }
-    }
+        this.events = this.events.filter((iEvent) => iEvent !== event);
+        this.handleEvent('Deleted', event);
+      },
+    },
   ];
-
-  @Input() events: CalendarEvent[] = [];
-
-
 
 
   constructor(
-    private depositEventsSort: CalendarService
+    private modal: NgbModal
   ) { }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -110,26 +119,22 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
-    console.log(event);
-
-    // this.modalData = { event, action };
+    this.modalData = { event, action };
+    this.modal.open(this.modalContent, { size: 'lg' });
   }
 
-  // addEvent(): void {
-  //   this.events.push({
-  //     title: 'New event',
-  //     start: startOfDay(new Date()),
-  //     end: endOfDay(new Date()),
-  //     color: colors.red,
-  //     draggable: true,
-  //     resizable: {
-  //       beforeStart: true,
-  //       afterEnd: true
-  //     }
-  //   });
-  //   this.refresh.next();
-  // }
   ngOnInit(): void {
+
+    this.events = this.depositItems.map((k, i) => ({
+      type: k.type,
+      title: k.amount,
+      start: startOfDay(new Date(Date.parse(k.date))),
+      color: k.type === "deposit" ? colors : colors.yellow
+    }));
+
+    console.log(this.events);
+
+    // debugger;
 
   }
 

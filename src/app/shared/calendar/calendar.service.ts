@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
+import { CalendarEvent } from 'angular-calendar';
 import { startOfDay } from 'date-fns';
 
 @Injectable()
 export class CalendarService {
-
+  events: CalendarEvent
   constructor() { }
 
-  sortDepositEvents(events: any) {
-    return events.map(k => ({ title: k.amount, start: startOfDay(new Date()) }));
+  createDepositEvents(events: any) {
+    // console.log(events);
+
   }
 }

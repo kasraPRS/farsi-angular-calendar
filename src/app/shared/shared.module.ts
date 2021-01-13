@@ -14,6 +14,7 @@ import { CalendarDateFormatter, CalendarModule, DateAdapter } from 'angular-cale
 
 import { JalaliAdapter } from './providers/jalali-date-adapter.provider';
 import { CalendarService } from './calendar/calendar.service';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 registerLocaleData(localeFa);
 
@@ -36,11 +37,12 @@ export function momentAdapterFactory() {
           return new JalaliAdapter();
         }
       }),
-
+    NgbModalModule
   ],
   exports: [
     CalendarComponent,
-    FriendlyPricePipe
+    FriendlyPricePipe,
+    NgbModalModule
   ],
   providers: [
     {
