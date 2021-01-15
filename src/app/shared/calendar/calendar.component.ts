@@ -1,5 +1,4 @@
-import { depositMock } from './../../deposit-turnover/deposit-mock';
-import { CalendarService } from './calendar.service';
+
 import {
   Component,
   OnInit,
@@ -30,6 +29,9 @@ import moment from 'moment-jalaali';
 
 import { colors, actions } from './calendar-config';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import * as _ from 'lodash';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 @Component({
   selector: 'calendar',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -123,18 +125,81 @@ export class CalendarComponent implements OnInit {
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
+  kir(total, num) {
+    return total - num;
+  }
+
+
   ngOnInit(): void {
 
-    this.events = this.depositItems.map((k, i) => ({
-      type: k.type,
-      title: k.amount,
-      start: startOfDay(new Date(Date.parse(k.date))),
-      color: k.type === "deposit" ? colors : colors.yellow
-    }));
+    // this.events = this.depositItems.map(k => ({
+    //   type: k.type,
+    //   title: k.amount,
+    //   start: startOfDay(new Date(Date.parse(k.date))),
+    //   color: k.type === "deposit" ? colors : colors.yellow
+    // }));
+    // this.depositItems.reduce((a, b) => { return b.type })
+    // console.log(this.events);
 
-    console.log(this.events);
+    // this.events = this.depositItems.map(k => ({
+    //   type: k.type,
+    //   title: k.amount,
+    //   start: startOfDay(new Date(Date.parse(k.date))),
+    // }))
 
-    // debugger;
+    // _.groupBy([6.1, 4.2, 6.3], Math.floor);
+
+    // this.events = _.groupBy(this.depositItems.map(k => (
+    //   {
+    //     title: k.amount,
+    //     start: startOfDay(new Date(Date.parse(k.start))),
+    //     type: k.type,
+    //     color: k.type === "deposit" ? colors : colors.yellow
+    //   }
+    // )), 'type')
+    // this.events = _.groupBy(this.depositItems, 'type')
+
+    // console.log(_.groupBy(this.depositItems, 'type'));
+
+
+
+    // this.events = _.groupBy(this.depositItems.map(k => (
+    //   {
+    //     title: k.amount,
+    //     // title: _.sumBy(_(_.groupBy(this.depositItems, 'type'))),
+    //     // title: _.sumBy(_(_.groupBy(this.depositItems, 'type')['deposit']).groupBy('start').filter(group => group.length == 2).flatten().value(), 'amount'),
+    //     start: startOfDay(new Date(Date.parse(k.start))),
+    //     type: k.type,
+    //     color: k.type === "deposit" ? colors : colors.yellow
+    //   }
+    // )), 'type')
+
+    // this.events = _.sumBy(_(_.groupBy(this.depositItems, 'type')['deposit']).groupBy('start').filter(group => group.length == 2).flatten().value(), 'title')
+
+    // this.events = _.groupBy(this.depositItems, 'type')
+
+    // this.events = this.events['Withdrawal'].concat(this.events['deposit']); // final steps
+
+
+
+    const groupedResults = _(this.depositItems).map(k => (
+      {
+        title: k.amount,
+        start: startOfDay(new Date(Date.parse(k.start))),
+        type: k.type,
+      }
+    ))
+      .groupBy('start').mapValues(
+        item => {
+          return _.sumBy(_.groupBy(item, 'type')['deposit'], 'title');
+        }
+      ).value();
+
+    console.log(groupedResults); // sum of deposits
+
+    debugger;
+
+
 
   }
 
